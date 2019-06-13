@@ -1,10 +1,16 @@
 <?php
+
+declare(strict_types=1);
+
 namespace frontend\controllers;
 
+use frontend\models\ReportForm;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
+use frontend\services\DataConverterService;
 use Yii;
 use yii\base\InvalidArgumentException;
+use yii\base\Module;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -15,14 +21,23 @@ use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
 
-/**
- * Site controller
- */
 class SiteController extends Controller
 {
     /**
-     * {@inheritdoc}
+     * @var DataConverterService $dataConverterService
      */
+    private $dataConverterService;
+
+    public function __construct(
+        string $id,
+        Module $module,
+        DataConverterService $dataConverterService,
+        array $config = []
+    ) {
+        $this->dataConverterService = $dataConverterService;
+        parent::__construct($id, $module, $config);
+    }
+
     public function behaviors()
     {
         return [
@@ -67,21 +82,29 @@ class SiteController extends Controller
         ];
     }
 
-    /**
-     * Displays homepage.
-     *
-     * @return mixed
-     */
     public function actionIndex()
     {
         return $this->render('index');
     }
 
-    /**
-     * Logs in a user.
-     *
-     * @return mixed
-     */
+
+    public function actionConvert()
+    {
+        $reportForm = new ReportForm();
+        $dataModels = [];
+
+        if ($reportForm->load(Yii::$app->request->post())) {
+            $dataModels = $this->dataConverterService->getDataModels($reportForm->text);
+        }
+
+        $xls = $this->dataConverterService->createXlsFromDataModels($dataModels);
+
+        return $this->render('time-report', [
+            'reportForm' => $reportForm,
+            'dataModels' => $dataModels,
+        ]);
+    }
+
     public function actionLogin()
     {
         if (!Yii::$app->user->isGuest) {
@@ -122,7 +145,8 @@ class SiteController extends Controller
         $model = new ContactForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
-                Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');
+                Yii::$app->session->setFlash('success',
+                    'Thank you for contacting us. We will respond to you as soon as possible.');
             } else {
                 Yii::$app->session->setFlash('error', 'There was an error sending your message.');
             }
@@ -154,7 +178,8 @@ class SiteController extends Controller
     {
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post()) && $model->signup()) {
-            Yii::$app->session->setFlash('success', 'Thank you for registration. Please check your inbox for verification email.');
+            Yii::$app->session->setFlash('success',
+                'Thank you for registration. Please check your inbox for verification email.');
             return $this->goHome();
         }
 
@@ -177,7 +202,8 @@ class SiteController extends Controller
 
                 return $this->goHome();
             } else {
-                Yii::$app->session->setFlash('error', 'Sorry, we are unable to reset password for the provided email address.');
+                Yii::$app->session->setFlash('error',
+                    'Sorry, we are unable to reset password for the provided email address.');
             }
         }
 
@@ -250,7 +276,8 @@ class SiteController extends Controller
                 Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
                 return $this->goHome();
             }
-            Yii::$app->session->setFlash('error', 'Sorry, we are unable to resend verification email for the provided email address.');
+            Yii::$app->session->setFlash('error',
+                'Sorry, we are unable to resend verification email for the provided email address.');
         }
 
         return $this->render('resendVerificationEmail', [
