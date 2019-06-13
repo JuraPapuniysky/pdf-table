@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace frontend\services;
 
 use common\factories\Data\DataFactory;
+use common\factories\Spreadsheet\SpreadsheetFactory;
+use yii2tech\spreadsheet\Spreadsheet;
 
 class DataConverterService
 {
@@ -13,9 +15,15 @@ class DataConverterService
      */
     private $dataFactory;
 
-    public function __construct(DataFactory $dataFactory)
+    /**
+     * @var SpreadsheetFactory
+     */
+    private $spreadSheetFactory;
+
+    public function __construct(DataFactory $dataFactory, SpreadsheetFactory $spreadsheetFactory)
     {
         $this->dataFactory = $dataFactory;
+        $this->spreadSheetFactory = $spreadsheetFactory;
     }
 
     public function getDataModels(string $text): array
@@ -32,9 +40,9 @@ class DataConverterService
         return $convertedData;
     }
 
-    public function createXlsFromDataModels(array $dataModels): array
+    public function createXlsExporterFromDataModels(array $dataModels): Spreadsheet
     {
-        return $dataModels;
+        return $this->spreadSheetFactory->getSpreadsheet($dataModels);
     }
 
     private function getDatesPOPNRS(array $arrayText): array

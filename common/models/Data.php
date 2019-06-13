@@ -57,4 +57,22 @@ class Data extends Model
             ],
         ];
     }
+
+    public function attributeLabels()
+    {
+        return [
+            'time' => 'Час',
+            'serviceType' => 'Тип сервісу',
+            'direct'=> 'Напрямок',
+            'countTime' => 'Кількість Сек/Kb',
+            'phone' => 'Номер телефону/APN',
+            'extraMinutes' => 'Використано пакетних/додаткових хвилин/грн.',
+            'cost' => 'Вартість (без ПДВ), грн.',
+            'internationalRoamingCost' => 'Вартість послуг міжнародного роумінгу**, грн',
+            'nationalRoamingCost' => 'Вартість послуг національного роумінгу, грн.',
+            'tariffZone' => 'Тарифна зона',
+            'tariffTime' => 'Тарифний час',
+            'tariffGroup' => 'Тарифна група',
+        ];
+    }
 }

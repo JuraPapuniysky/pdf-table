@@ -95,9 +95,10 @@ class SiteController extends Controller
 
         if ($reportForm->load(Yii::$app->request->post())) {
             $dataModels = $this->dataConverterService->getDataModels($reportForm->text);
-        }
+            $exporter = $this->dataConverterService->createXlsExporterFromDataModels($dataModels);
 
-        $xls = $this->dataConverterService->createXlsFromDataModels($dataModels);
+            return $exporter->send('items.xls');
+        }
 
         return $this->render('time-report', [
             'reportForm' => $reportForm,
