@@ -6,7 +6,7 @@ namespace common\factories\Data;
 
 use common\models\DataTime;
 
-class DataTimeFactory implements DataFactoryInterface
+class DataTimeFactory implements DataTimeFactoryInterface
 {
 
     const DATA = 11;

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace frontend\services;
 
-use common\factories\Data\DataFactory;
 use common\factories\Data\DataTimeFactory;
+use common\factories\Data\DataFactory;
 use common\factories\Spreadsheet\SpreadsheetFactory;
 use yii2tech\spreadsheet\Spreadsheet;
 
@@ -21,7 +21,7 @@ class DataConverterService
     private $dataTimeFactory;
 
     /**
-     * @var DataFactory $dataFactory
+     * @var DataTimeFactory $dataFactory
      */
     private $dataFactory;
 
@@ -106,7 +106,7 @@ class DataConverterService
             }
 
             if (strstr(trim($arrayText[$i]), 'Вх.') !== false) {
-                array_push($data, $arrayText[$i]);
+                array_push($data, explode(' ', $arrayText[$i]));
             }
         }
 

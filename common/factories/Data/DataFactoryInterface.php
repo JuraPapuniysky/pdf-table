@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace common\factories\Data;
 
-use common\models\DataTime;
+use common\models\Data;
 
 interface DataFactoryInterface
 {
-    public function getDataModel(array $data, string $item, int $key): DataTime;
+    public function getDataModel(array $data, string $item, int $key): Data;
 }
