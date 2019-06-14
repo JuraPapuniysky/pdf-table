@@ -88,19 +88,34 @@ class SiteController extends Controller
     }
 
 
-    public function actionConvert()
+    public function actionConvertTime()
+    {
+        $reportForm = new ReportForm();
+        $dataModels = [];
+
+        if ($reportForm->load(Yii::$app->request->post())) {
+            $dataModels = $this->dataConverterService->getDataTimeModels($reportForm->text);
+            $exporter = $this->dataConverterService->createXlsExporterFromDataModels($dataModels);
+
+            return $exporter->send('time-report.xls');
+        }
+
+        return $this->render('time-report', [
+            'reportForm' => $reportForm,
+            'dataModels' => $dataModels,
+        ]);
+    }
+
+    public function actionConvertData()
     {
         $reportForm = new ReportForm();
         $dataModels = [];
 
         if ($reportForm->load(Yii::$app->request->post())) {
             $dataModels = $this->dataConverterService->getDataModels($reportForm->text);
-            $exporter = $this->dataConverterService->createXlsExporterFromDataModels($dataModels);
-
-            return $exporter->send('items.xls');
         }
 
-        return $this->render('time-report', [
+        return $this->render('data-report', [
             'reportForm' => $reportForm,
             'dataModels' => $dataModels,
         ]);

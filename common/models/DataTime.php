@@ -4,31 +4,30 @@ declare(strict_types=1);
 
 namespace common\models;
 
-
 use yii\base\Model;
 
 /**
  * @property string $time
  * @property string $serviceType
  * @property string $direct
- * @property string $bits
+ * @property string $countTime
  * @property string $phone
- * @property string $extraTime
- * @property float $cost
- * @property float $internationalRoamingCost
- * @property float $nationalRoamingCost
+ * @property string $extraMinutes
+ * @property string $cost
+ * @property string $internationalRoamingCost
+ * @property string $nationalRoamingCost
  * @property string $tariffZone
  * @property string $tariffTime
  * @property string $tariffGroup
  */
-class Data extends Model
+class DataTime extends Model
 {
     public $time;
     public $serviceType;
     public $direct;
-    public $bits;
+    public $countTime;
     public $phone;
-    public $extraTime;
+    public $extraMinutes;
     public $cost;
     public $internationalRoamingCost;
     public $nationalRoamingCost;
@@ -39,9 +38,9 @@ class Data extends Model
     public function rules(): array
     {
         return [
-            [['serviceType', 'direct', 'bits', 'phone', 'tariffZone', 'tariffGroup'], 'string'],
+            [['serviceType', 'direct', 'countTime', 'phone', 'tariffZone', 'tariffGroup'], 'string'],
             [['cost', 'internationalRoamingCost', 'nationalRoamingCost',], 'float'],
-            [['tariffTime', 'time', 'extraTime'], 'integer']
+            [['tariffTime', 'time', 'extraMinutes'], 'integer']
         ];
     }
 
@@ -51,9 +50,9 @@ class Data extends Model
             'time' => 'Час',
             'serviceType' => 'Тип сервісу',
             'direct'=> 'Напрямок',
-            'bits' => 'Кількість Сек/Kb',
+            'countTime' => 'Кількість Сек/Kb',
             'phone' => 'Номер телефону/APN',
-            'extraTime' => 'Використано пакетних/додаткових хвилин/грн.',
+            'extraMinutes' => 'Використано пакетних/додаткових хвилин/грн.',
             'cost' => 'Вартість (без ПДВ), грн.',
             'internationalRoamingCost' => 'Вартість послуг міжнародного роумінгу**, грн',
             'nationalRoamingCost' => 'Вартість послуг національного роумінгу, грн.',
