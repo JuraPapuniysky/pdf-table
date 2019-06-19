@@ -12,13 +12,7 @@ use yii\helpers\Html;
 <?= $form->field($reportForm, 'text')->textarea() ?>
 
 <div class="form-group">
-    <?= Html::submitButton('Save', ['class' => 'btn btn-primary']) ?>
+    <?= Html::submitButton('Конвертувати', ['class' => 'btn btn-primary']) ?>
 </div>
 
 <?php ActiveForm::end(); ?>
-
-<pre>
-<?php
-print_r($dataModels);
-?>
-</pre>
