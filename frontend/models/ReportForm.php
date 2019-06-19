@@ -19,4 +19,11 @@ class ReportForm extends Model
             [['text',], 'string'],
         ];
     }
+
+    public function attributeLabels()
+    {
+        return [
+            'text' => 'Вставте текст',
+        ];
+    }
 }
