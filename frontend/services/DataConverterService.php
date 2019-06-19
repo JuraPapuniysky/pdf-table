@@ -60,7 +60,12 @@ class DataConverterService
 
         $data = $this->getDatesPOPNRS($arrayText, self::DATA_REPORT_TYPE);
 
-        return $data;
+        $convertedData = [];
+        foreach ($data[2] as $key => $item) {
+            array_push($convertedData, $this->dataFactory->getDataModel($data, $item, $key));
+        }
+
+        return $convertedData;
     }
 
     public function createXlsExporterFromDataModels(array $dataModels): Spreadsheet
@@ -106,7 +111,7 @@ class DataConverterService
             }
 
             if (strstr(trim($arrayText[$i]), 'Вх.') !== false) {
-                array_push($data, explode(' ', $arrayText[$i]));
+                array_push($data,   $arrayText[$i]);
             }
         }
 
