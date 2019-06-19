@@ -1,16 +1,22 @@
 <?php
 
 /* @var $this yii\web\View */
+/* @var $aboutForm \frontend\models\AboutForm */
 
 use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 
-$this->title = 'About';
+$this->title = 'Довідка';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-about">
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>This is the About page. You may modify the following file to customize its content:</p>
+    <?php $form = ActiveForm::begin(['id' => 'report-form']); ?>
 
-    <code><?= __FILE__ ?></code>
+    <?= $form->field($aboutForm, 'data')->textarea() ?>
+
+    <?= $form->field($aboutForm, 'time')->textarea() ?>
+
+    <?php ActiveForm::end(); ?>
 </div>
