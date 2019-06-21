@@ -1,38 +1,31 @@
-version: '3.2'
-
+version: '2'
 services:
 
-  frontend:
-    build: frontend
-    ports:
-      - 20080:80
-    volumes:
-      # Re-use local composer cache via host-volume
-      - ~/.composer-docker/cache:/root/.composer/cache:delegated
-      # Mount source-code for development
-      - ./:/app
-
-  backend:
-    build: backend
-    ports:
-      - 21080:80
-    volumes:
-      # Re-use local composer cache via host-volume
-      - ~/.composer-docker/cache:/root/.composer/cache:delegated
-      # Mount source-code for development
-      - ./:/app
-
-  mysql:
-    image: mysql:5.7
+  #PHP Service
+  pdf_table:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: php-app
+    restart: always
+    tty: true
     environment:
-      - MYSQL_ROOT_PASSWORD=verysecret
-      - MYSQL_DATABASE=yii2advanced
-      - MYSQL_USER=yii2advanced
-      - MYSQL_PASSWORD=secret
+      SERVICE_NAME: pdf_table
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    volumes:
+           - ./:/var/www
+           - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
 
-  #pgsql:
-  #  image: postgres:9.5
-  #  environment:
-  #    - POSTGRES_DB=yii2advanced
-  #    - POSTGRES_USER=yii2advanced
-  #    - POSTGRES_PASSWORD=secret
+  #Nginx Service
+  nginx:
+    image: nginx:alpine
+    restart: always
+    tty: true
+    ports:
+      - "8070:80"
+      - "450:443"
+    volumes:
+      - ./:/var/www
+      - ./nginx/conf.d/:/etc/nginx/conf.d
+
