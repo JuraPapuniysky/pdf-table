@@ -4,23 +4,16 @@ declare(strict_types=1);
 
 namespace frontend\controllers;
 
+use frontend\models\PhoneReportForm;
 use frontend\models\ReportForm;
-use frontend\models\ResendVerificationEmailForm;
-use frontend\models\VerifyEmailForm;
 use frontend\services\AboutService;
 use frontend\services\DataConverterService;
+use frontend\services\PhoneReportService;
 use Yii;
-use yii\base\InvalidArgumentException;
 use yii\base\Module;
-use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use common\models\LoginForm;
-use frontend\models\PasswordResetRequestForm;
-use frontend\models\ResetPasswordForm;
-use frontend\models\SignupForm;
-use frontend\models\ContactForm;
 
 class SiteController extends Controller
 {
@@ -34,15 +27,19 @@ class SiteController extends Controller
      */
     private $aboutService;
 
+    private $phoneReportService;
+
     public function __construct(
         string $id,
         Module $module,
         DataConverterService $dataConverterService,
         AboutService $aboutService,
+        PhoneReportService $phoneReportService,
         array $config = []
     ) {
         $this->dataConverterService = $dataConverterService;
         $this->aboutService = $aboutService;
+        $this->phoneReportService = $phoneReportService;
         parent::__construct($id, $module, $config);
     }
 
@@ -136,6 +133,23 @@ class SiteController extends Controller
     {
         return $this->render('about', [
             'aboutForm' => $this->aboutService->getAboutData(),
+        ]);
+    }
+
+    public function actionPhoneReport()
+    {
+        $model = new PhoneReportForm();
+
+        if ($model->load(Yii::$app->request->post())) {
+            $reportFilePath = $this->phoneReportService->uploadPhoneReport($model);
+
+            $reportCsv = $this->phoneReportService->createPhoneReportFile($reportFilePath);
+
+            return Yii::$app->response->sendFile($reportCsv);
+        }
+
+        return $this->render('phone-report', [
+            'model' => $model
         ]);
     }
 }

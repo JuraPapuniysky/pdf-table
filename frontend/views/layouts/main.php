@@ -38,6 +38,7 @@ AppAsset::register($this);
     $menuItems = [
         ['label' => 'Ковертер звітів', 'url' => ['/site/index']],
         ['label' => 'Довідка', 'url' => ['/site/about']],
+        ['label' => 'Звіт телефони', 'url' => ['/site/phone-report']],
     ];
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
